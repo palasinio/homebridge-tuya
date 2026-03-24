@@ -1,9 +1,9 @@
 {
   "name": "homebridge-tuya",
 
-  "version": "3.1.1",
+  "version": "3.1.2",
 
-  "description": "🏠 Offical Homebridge plugin for TuyAPI ",
+  "description": "Homebridge plugin for local Tuya devices",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/iRayanKhan/homebridge-tuya.git"
+    "url": "git+https://github.com/palasinio/homebridge-tuya.git"
   },
   "author": "Rayan Khan",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/iRayanKhan/homebridge-tuya/issues"
+    "url": "https://github.com/palasinio/homebridge-tuya/issues"
   },
-  "homepage": "https://github.com/iRayanKhan/homebridge-tuya#readme",
+  "homepage": "https://github.com/palasinio/homebridge-tuya#readme",
   "dependencies": {
     "async": "^3.2.2",
     "commander": "^3.0.1",
@@ -39,7 +39,7 @@
     "tuya"
   ],
   "engines": {
-    "homebridge": ">=0.4.0",
-    "node": ">=8.6.0"
+    "homebridge": "^1.8.0 || ^2.0.0-beta.0",
+    "node": ">=18.0.0"
   }
 }

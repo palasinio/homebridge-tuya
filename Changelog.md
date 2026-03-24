@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. This project uses [semantic versioning](https://semver.org/).
 
+## 3.1.2 (2026-03-25)
+This fork release includes the following changes:
+
+* Added Homebridge 2 compatibility fixes for cached accessory restoration.
+* Sanitized invalid HomeKit accessory and service names before registration.
+* Hardened Tuya UDP discovery parsing and added recovery for malformed 6667 discovery payloads seen with some 3.3 devices.
+* Updated package metadata and compatibility notes for the `palasinio/homebridge-tuya` fork.
+
 ## 2.0.1 (2021-03-25)
 This update includes the following changes:
 
