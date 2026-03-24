@@ -25,6 +25,11 @@ const OilDiffuserAccessory = require('./lib/OilDiffuserAccessory');
 
 const PLUGIN_NAME = 'homebridge-tuya';
 const PLATFORM_NAME = 'TuyaLan';
+const PERMS = {
+    READ: 'pr',
+    WRITE: 'pw',
+    NOTIFY: 'ev'
+};
 
 const CLASS_DEF = {
     outlet: OutletAccessory,
@@ -51,6 +56,15 @@ const CLASS_DEF = {
 };
 
 let Characteristic, PlatformAccessory, Service, Categories, AdaptiveLightingController, UUID;
+
+function sanitizeHomeKitName(name, fallback = 'Unnamed') {
+    const normalized = ('' + (name || fallback))
+        .replace(/[^A-Za-z0-9' ]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    return normalized || fallback;
+}
 
 module.exports = function(homebridge) {
     ({
@@ -169,7 +183,7 @@ class TuyaLan {
                     if (!characteristic.props ||
                         !Array.isArray(characteristic.props.perms) ||
                         characteristic.props.perms.length !== 3 ||
-                        !(characteristic.props.perms.includes(Characteristic.Perms.WRITE) && characteristic.props.perms.includes(Characteristic.Perms.NOTIFY))
+                        !(characteristic.props.perms.includes(PERMS.WRITE) && characteristic.props.perms.includes(PERMS.NOTIFY))
                     ) return;
 
                     this.log.info('Marked %s unreachable by faulting Service.%s.%s', accessory.displayName, service.displayName, characteristic.displayName);
@@ -206,7 +220,7 @@ class TuyaLan {
         }
 
         if (!accessory) {
-            accessory = new PlatformAccessory(deviceConfig.name, deviceConfig.UUID, Accessory.getCategory(Categories));
+            accessory = new PlatformAccessory(sanitizeHomeKitName(deviceConfig.name), deviceConfig.UUID, Accessory.getCategory(Categories));
             accessory.getService(Service.AccessoryInformation)
                 .setCharacteristic(Characteristic.Manufacturer, deviceConfig.manufacturer || "Unknown")
                 .setCharacteristic(Characteristic.Model, deviceConfig.model || "Unknown")
@@ -215,11 +229,13 @@ class TuyaLan {
             isCached = false;
         }
 
-        if (accessory && accessory.displayName !== deviceConfig.name) {
+        const sanitizedName = sanitizeHomeKitName(deviceConfig.name);
+
+        if (accessory && accessory.displayName !== sanitizedName) {
             this.log.info(
                 "Configuration name %s differs from cached displayName %s. Updating cached displayName to %s ",
-                deviceConfig.name, accessory.displayName, deviceConfig.name);
-            accessory.displayName = deviceConfig.name;
+                deviceConfig.name, accessory.displayName, sanitizedName);
+            accessory.displayName = sanitizedName;
         }
 
         this.cachedAccessories.set(deviceConfig.UUID, new Accessory(this, accessory, device, !isCached));
@@ -230,8 +246,8 @@ class TuyaLan {
 
         this.log.warn('Unregistering', homebridgeAccessory.displayName);
 
-        delete this.cachedAccessories[homebridgeAccessory.UUID];
-        this.api.unregisterPlatformAccessories(PLATFORM_NAME, PLATFORM_NAME, [homebridgeAccessory]);
+        this.cachedAccessories.delete(homebridgeAccessory.UUID);
+        this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [homebridgeAccessory]);
     }
 
     removeAccessoryByUUID(uuid) {

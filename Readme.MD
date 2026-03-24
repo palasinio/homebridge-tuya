@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/iRayanKhan/homebridge-tuya/main/assets/Tuya-Plugin-Branding.png" height="100"><br>
+    <img src="https://raw.githubusercontent.com/palasinio/homebridge-tuya/main/assets/Tuya-Plugin-Branding.png" height="100"><br>
 </p>
 
 
@@ -17,6 +17,8 @@
 
 
 Control your supported Tuya accessories locally in HomeKit
+
+This fork includes Homebridge 2 compatibility fixes for cached accessories, malformed Tuya LAN discovery payloads, and automatic sanitizing of invalid HomeKit accessory names.
 
 * [Supported Device Types](#supported-device-types)
 * [Installation Instructions](#installation-instructions)
@@ -61,6 +63,12 @@ Search for "Tuya" in [homebridge-config-ui-x](https://github.com/oznu/homebridge
 ```
 sudo npm install -g homebridge-tuya
 ```
+
+## Compatibility
+
+* Homebridge `^1.8.0 || ^2.0.0-beta.0`
+* Node.js `>=18`
+* Tuya 3.3 devices with malformed UDP discovery payloads are handled more defensively than in the upstream 3.1.1 release.
 
 ## Configuration
 > UI
